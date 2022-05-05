@@ -130,3 +130,6 @@
 (defun main ()
   (start)
   (loop))
+
+(defun build ()
+  (sb-ext:save-lisp-and-die "bible" :executable t :toplevel #'main))
