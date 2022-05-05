@@ -2,6 +2,18 @@
 
 (in-package #:cl-bible)
 
+(defclass verse ()
+  ((%bname :initarg :bname
+           :reader bname)
+   (%bsname :initarg :bsname
+            :reader bsname)
+   (%chapter :initarg :chapter
+             :reader chapter)
+   (%number :initarg :number
+            :reader vnumber)
+   (%text :initarg :text
+          :reader text)))
+
 (defun string->verse (string)
   (uiop:split-string string :separator '(#\Tab)))
 
