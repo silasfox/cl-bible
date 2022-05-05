@@ -1,4 +1,6 @@
 ;;;; package.lisp
 
 (defpackage #:cl-bible
-  (:use #:cl #:clog #:clog-gui))
+  (:use #:cl #:clog #:clog-gui)
+  (:exports main
+            start))

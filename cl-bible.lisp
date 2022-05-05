@@ -126,3 +126,7 @@
 (defun start ()
   (initialize #'on-new-window)
   (open-browser))
+
+(defun main ()
+  (start)
+  (loop))
