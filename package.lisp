@@ -2,4 +2,5 @@
 
 (defpackage #:cl-bible
   (:use #:cl #:clog #:clog-gui)
-  (:exports start))
+  (:exports start
+            build))
