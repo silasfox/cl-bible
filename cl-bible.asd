@@ -8,7 +8,10 @@
   :serial t
   :depends-on (#:str #:clog)
   :components ((:file "package")
+               (:file "verse")
                (:file "search")
                (:file "lift-search")
                (:file "annotate")
+               (:file "data")
+               (:file "clog")
                (:file "cl-bible")))
