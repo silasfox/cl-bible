@@ -11,7 +11,7 @@
                 :content (str:join ", " result)))))
 
 (defun ergebnis/se (n)
-  (format nil "~A Ergebnis~A" n (if (= n 1) "" "se" )))
+  (format nil "~A Ergebnis~A" n (if (= n 1) "" "se")))
 
 (defun search-in-bible (phrase canvas)
   (let* ((win (window-content (create-gui-window canvas :title phrase
