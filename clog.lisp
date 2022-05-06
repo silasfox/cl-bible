@@ -10,6 +10,9 @@
       (create-p (window-content win)
                 :content (str:join ", " result)))))
 
+(defun ergebnis/se (n)
+  (format nil "~A Ergebnis~A" n (if (= n 1) "" "se" )))
+
 (defun search-in-bible (phrase canvas)
   (let* ((win (window-content (create-gui-window canvas :title phrase
                                                         :height 400
@@ -18,7 +21,7 @@
          (div (create-div win))
          (results (s:find-in-bible d:*bible* phrase)))
     (set-on-click lift-search (lift-search-window canvas results))
-    (create-p div :content (format nil "~A Ergebnis(se)"
+    (create-p div :content (ergebnis/se
                                    (length results)))
     (mapc (lambda (verse)
             (create-p div :content
@@ -63,7 +66,7 @@
 (defun get-chapter (window body)
   (lambda (obj)
     (declare (ignore obj))
-    (form-dialog window "Which bible do you want?"
+    (form-dialog window "Which chapter do you want?"
                  '(("Book" "book" :text "Book")
                    ("Chapter" "chapter" :text "Chapter"))
                  (load-chapter body)
