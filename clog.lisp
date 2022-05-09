@@ -22,10 +22,9 @@
          (results (s:find-in-bible d:*bible* phrase)))
     (set-on-click lift-search (lift-search-window canvas results))
     (create-p div :content (ergebnis/se
-                                   (length results)))
+                            (length results)))
     (mapc (lambda (verse)
-            (create-p div :content
-                      (v:verse-to-string verse)))
+            (v:verse-to-clog verse div))
           results)))
 
 (defun searcher (window)
@@ -45,7 +44,7 @@
                                              ("Greek Bible" "grb"))))
                  (lambda (results)
                    (d:update-bible (cadar results))
-                 :title "Load a Bible"))))
+                   :title "Load a Bible"))))
 
 (defun load-chapter (canvas)
   (lambda (data)
@@ -59,16 +58,15 @@
                                            :width 650)))
            (div (create-div win)))
       (mapc (lambda (verse)
-              (create-p div :content
-                        (v:verse-to-string verse)))
+              (v:verse-to-clog verse div))
             (s:find-chapter (s:find-book d:*bible* book) chapter)))))
 
 (defun get-chapter (window body)
   (lambda (obj)
     (declare (ignore obj))
     (form-dialog window "Which chapter do you want?"
-                 '(("Book" "book" :text "Book")
-                   ("Chapter" "chapter" :text "Chapter"))
+                 '(("Book" "book" :text)
+                   ("Chapter" "chapter" :text))
                  (load-chapter body)
                  :title "Load a Chapter")))
 
@@ -87,7 +85,7 @@
     (create-gui-menu-item drop-down
                           :content "Search"
                           :on-click (searcher window))
-   (create-gui-menu-item drop-down
+    (create-gui-menu-item drop-down
                           :content "Get Chapter"
                           :on-click (get-chapter window body))
     (create-gui-menu-item drop-down
@@ -99,7 +97,17 @@
                                       (declare (ignore obj))
                                       (loop for win = (current-window body)
                                             unless win do (return) 
-                                            do (window-close win))))))
+                                              do (window-close win))))
+    (create-gui-menu-item mbar
+                          :content "Save notes"
+                          :on-click (lambda (obj)
+                                      (declare (ignore obj))
+                                      (d:persist)))
+    (create-gui-menu-item mbar
+                          :content "Load notes"
+                          :on-click (lambda (obj)
+                                      (declare (ignore obj))
+                                      (d:load-bibles)))))
 
 
 (defun on-new-window (body)

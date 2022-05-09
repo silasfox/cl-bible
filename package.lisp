@@ -2,13 +2,16 @@
 
 (defpackage #:cl-bible.verse
   (:use #:cl)
-  (:export verse-to-string
+  (:export verse-to-clog
            string-to-verse
+           to-sexp
+           from-sexp
            bname
            bsname
            chapter
            vnumber
-           text))
+           text
+           notes))
 
 (defpackage #:cl-bible.search
   (:use #:cl)
@@ -28,7 +31,9 @@
   (:local-nicknames (#:s #:cl-bible.search)
                     (#:v #:cl-bible.verse))
   (:export update-bible
-           *bible*))
+           *bible*
+           persist
+           load-bibles))
 
 (defpackage #:cl-bible.clog
   (:use #:cl #:clog #:clog-gui)
@@ -42,4 +47,14 @@
   (:use #:cl #:clog #:clog-gui)
   (:local-nicknames (#:c #:cl-bible.clog))
   (:export start
+           main
            build))
+
+(defpackage #:cl-bible-user
+  (:use #:cl
+        #:cl-bible
+        #:cl-bible.verse
+        #:cl-bible.data
+        #:cl-bible.search)
+  (:local-nicknames (#:c #:clog)
+                    (#:cg #:clog-gui)))
