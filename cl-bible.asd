@@ -4,7 +4,7 @@
   :description "A bible study app"
   :author "Silas Vedder <silas@silasvedder.xyz>"
   :license  "MIT"
-  :version "0.0.2"
+  :version "0.0.3"
   :serial t
   :depends-on (#:str #:clog)
   :components ((:file "package")
