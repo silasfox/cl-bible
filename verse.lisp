@@ -65,7 +65,9 @@
                                            :title "Add note")))
          (form (clog:create-form win))
          (text (clog:create-text-area form :rows 4))
+         (_ (clog:create-br form))
          (button (clog:create-button form :content "submit")))
+    (declare (ignore _))
     (clog:set-on-click button
                        (lambda (obj)
                          (declare (ignore obj))

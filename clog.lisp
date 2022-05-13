@@ -46,20 +46,37 @@
                    (d:update-bible (cadar results))
                    :title "Load a Bible"))))
 
-(defun load-chapter (canvas)
+(defun load-book-or-chapter (canvas)
   (lambda (data)
     (let* ((book (cadr (assoc "book" data :test #'string=)))
-           (chapter (cadr (assoc "chapter" data :test #'string=)))
-           (win (window-content
-                 (create-gui-window canvas :title (format nil "~A ~A"
-                                                          book
-                                                          chapter)
-                                           :height 400
-                                           :width 650)))
-           (div (create-div win)))
-      (mapc (lambda (verse)
-              (v:verse-to-clog verse div))
-            (s:find-chapter (s:find-book d:*bible* book) chapter)))))
+           (chapter (cadr (assoc "chapter" data :test #'string=))))
+      (if (string= chapter "")
+          (load-book canvas book)
+          (load-chapter canvas book chapter)))))
+           
+
+(defun load-book (canvas book)
+  (let* ((win (window-content
+               (create-gui-window canvas :title (format nil "~A"
+                                                        book)
+                                         :height 400
+                                         :width 650)))
+         (div (create-div win)))
+    (mapc (lambda (verse)
+            (v:verse-to-clog verse div))
+          (s:find-book d:*bible* book))))
+
+(defun load-chapter (canvas book chapter)
+  (let* ((win (window-content
+               (create-gui-window canvas :title (format nil "~A ~A"
+                                                        book
+                                                        chapter)
+                                         :height 400
+                                         :width 650)))
+         (div (create-div win)))
+    (mapc (lambda (verse)
+            (v:verse-to-clog verse div))
+          (s:find-chapter (s:find-book d:*bible* book) chapter))))
 
 (defun get-chapter (window body)
   (lambda (obj)
@@ -67,7 +84,7 @@
     (form-dialog window "Which chapter do you want?"
                  '(("Book" "book" :text)
                    ("Chapter" "chapter" :text))
-                 (load-chapter body)
+                 (load-book-or-chapter body)
                  :title "Load a Chapter")))
 
 (defun setup-window (body)

@@ -3,29 +3,37 @@
 (in-package #:cl-bible.data)
 
 (defun init-bible (&optional (bible "mng"))
-  (setf *bible*
-        (mapcar #'v:string-to-verse
-                (uiop:read-file-lines
-                 (asdf:system-relative-pathname
-                  "cl-bible"
-                  (format nil "resources/~A.tsv" bible))))))
+  (mapcar #'v:string-to-verse
+          (uiop:read-file-lines
+           (asdf:system-relative-pathname
+            "cl-bible"
+            (format nil "resources/~A.tsv" bible)))))
 
 (defun load-bible (filename)
   (v:from-sexp
    (read-from-string
     (uiop:read-file-string (uiop:native-namestring filename)))))
 
-(defvar *mng* (load-bible "~/.bible/menge.sexp"))
-(defvar *vul* (load-bible "~/.bible/vulgata.sexp"))
-(defvar *grb* (load-bible "~/.bible/greek.sexp"))
-(defvar *kjv* (load-bible "~/.bible/kjv.sexp"))
-(defvar *bible* *mng*)
+(defvar *mng*)
+(defvar *vul*)
+(defvar *grb*)
+(defvar *kjv*)
+(defvar *bible*)
 
 (defun load-bibles ()
-  (setf *mng* (load-bible "~/.bible/menge.sexp"))
-  (setf *vul* (load-bible "~/.bible/vulgata.sexp"))
-  (setf *grb* (load-bible "~/.bible/greek.sexp"))
-  (setf *kjv* (load-bible "~/.bible/kjv.sexp")))
+  (if (uiop:file-exists-p (uiop:native-namestring "~/.bible/menge.sexp"))
+      (progn
+        (setf *mng* (init-bible "mng"))
+        (setf *kjv* (init-bible "kjv"))
+        (setf *vul* (init-bible "vul"))
+        (setf *grb* (init-bible "grb")))
+      (progn
+        (setf *mng* (load-bible "~/.bible/menge.sexp"))
+        (setf *vul* (load-bible "~/.bible/vulgata.sexp"))
+        (setf *grb* (load-bible "~/.bible/greek.sexp"))
+        (setf *kjv* (load-bible "~/.bible/kjv.sexp")))))
+
+(load-bibles)
 
 (defun update-bible (str)
   (let ((bibles `(("mng" . ,*mng*)
