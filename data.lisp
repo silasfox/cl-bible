@@ -21,17 +21,18 @@
 (defvar *bible*)
 
 (defun load-bibles ()
+  (ensure-directories-exist (uiop:native-namestring "~/.bible/"))
   (if (uiop:file-exists-p (uiop:native-namestring "~/.bible/menge.sexp"))
-      (progn
-        (setf *mng* (init-bible "mng"))
-        (setf *kjv* (init-bible "kjv"))
-        (setf *vul* (init-bible "vul"))
-        (setf *grb* (init-bible "grb")))
       (progn
         (setf *mng* (load-bible "~/.bible/menge.sexp"))
         (setf *vul* (load-bible "~/.bible/vulgata.sexp"))
         (setf *grb* (load-bible "~/.bible/greek.sexp"))
-        (setf *kjv* (load-bible "~/.bible/kjv.sexp")))))
+        (setf *kjv* (load-bible "~/.bible/kjv.sexp")))
+      (progn
+        (setf *mng* (init-bible "mng"))
+        (setf *kjv* (init-bible "kjv"))
+        (setf *vul* (init-bible "vul"))
+        (setf *grb* (init-bible "grb")))))
 
 (load-bibles)
 
