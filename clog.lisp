@@ -24,7 +24,7 @@
     (create-p div :content (ergebnis/se
                             (length results)))
     (mapc (lambda (verse)
-            (v:verse-to-clog verse div :translation d::*translation*))
+            (v:verse-to-clog verse div :translation d:*translation*))
           results)))
 
 (defun searcher (window)
@@ -64,25 +64,27 @@
 
 (defun load-book (canvas book)
   (let* ((win (window-content
-               (create-gui-window canvas :title (format nil "~A"
+               (create-gui-window canvas :title (format nil "~A: ~A"
+                                                        d:*translation*
                                                         book)
                                          :height 400
                                          :width 650)))
          (div (create-div win)))
     (mapc (lambda (verse)
-            (v:verse-to-clog verse div :translation d::*translation*))
+            (v:verse-to-clog verse div :translation d:*translation*))
           (s:find-book d:*bible* book))))
 
 (defun load-chapter (canvas book chapter)
   (let* ((win (window-content
-               (create-gui-window canvas :title (format nil "~A ~A"
+               (create-gui-window canvas :title (format nil "~A: ~A ~A"
+                                                        d:*translation*
                                                         book
                                                         chapter)
                                          :height 400
                                          :width 650)))
          (div (create-div win)))
     (mapc (lambda (verse)
-            (v:verse-to-clog verse div :translation d::*translation*))
+            (v:verse-to-clog verse div :translation d:*translation*))
           (s:find-chapter (s:find-book d:*bible* book) chapter))))
 
 (defun get-chapter (window body)

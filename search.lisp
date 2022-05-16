@@ -4,9 +4,7 @@
 
 (defun find-in-bible (bible phrase)
   (remove-if-not (lambda (verse) (search phrase
-                                         (cdr
-                                          (assoc cl-bible.data:*translation*
-                                                 (v:translations verse)))))
+                                         (v:get-text verse)))
                  bible))
 
 (defun find-book (bible book)

@@ -49,6 +49,10 @@
           separator
           (cdr (assoc translation (translations verse)))))
 
+(defgeneric get-text (verse))
+(defmethod get-text ((verse verse))
+  (cdr (assoc cl-bible.data:*translation* (translations verse))))
+
 (defmethod show-notes ((verse verse) (parent clog:clog-obj))
   (let* ((win (clog-gui:create-gui-window parent
                               :title "Notes"

@@ -5,8 +5,7 @@
 (defun frequent-words () (str:words "der die das dir mir wir ihr sie sein mein dein euer unser dem den in zu und"))
 
 (defun lift-search (search-result)
-  (comb (diff-verses (mapcar #'v:text
-                             search-result))
+  (comb (diff-verses (mapcar #'v:get-text search-result))
         (length search-result)))
 
 (defun count-words (words)

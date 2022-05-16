@@ -12,7 +12,8 @@
            vnumber
            text
            notes
-           translations))
+           translations
+           get-text))
 
 (defpackage #:cl-bible.search
   (:use #:cl)
@@ -20,12 +21,6 @@
   (:export find-in-bible
            find-book
            find-chapter))
-
-(defpackage #:cl-bible.lift-search
-  (:use #:cl)
-  (:local-nicknames (#:s #:cl-bible.search)
-                    (#:v #:cl-bible.verse))
-  (:export lift-search))
 
 (defpackage #:cl-bible.data
   (:use #:cl)
@@ -36,6 +31,13 @@
            *translation*
            persist
            load-bibles))
+
+(defpackage #:cl-bible.lift-search
+  (:use #:cl)
+  (:local-nicknames (#:s #:cl-bible.search)
+                    (#:v #:cl-bible.verse)
+                    (#:d #:cl-bible.data))
+  (:export lift-search))
 
 (defpackage #:cl-bible.clog
   (:use #:cl #:clog #:clog-gui)
