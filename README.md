@@ -14,3 +14,7 @@ $ sbcl
 * (in-package :cl-bible-user)
 * (start)
 ```
+
+## bibles
+
+Most of the bibles are from [here](https://github.com/gratis-bible/bible).
