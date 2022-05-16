@@ -3,7 +3,11 @@
 (in-package #:cl-bible.search)
 
 (defun find-in-bible (bible phrase)
-  (remove-if-not (lambda (verse) (search phrase (v:text verse))) bible))
+  (remove-if-not (lambda (verse) (search phrase
+                                         (cdr
+                                          (assoc cl-bible.data:*translation*
+                                                 (v:translations verse)))))
+                 bible))
 
 (defun find-book (bible book)
   (remove-if-not (lambda (verse) (search book (v:bname verse))) bible))

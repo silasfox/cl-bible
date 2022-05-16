@@ -11,7 +11,8 @@
            chapter
            vnumber
            text
-           notes))
+           notes
+           translations))
 
 (defpackage #:cl-bible.search
   (:use #:cl)
@@ -32,6 +33,7 @@
                     (#:v #:cl-bible.verse))
   (:export update-bible
            *bible*
+           *translation*
            persist
            load-bibles))
 

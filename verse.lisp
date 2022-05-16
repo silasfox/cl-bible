@@ -13,6 +13,9 @@
             :reader vnumber)
    (%text :initarg :text
           :reader text)
+   (%translations :initarg :translations
+                  :initform '()
+                  :accessor translations)
    (%notes :initarg :notes
            :initform '()
            :accessor notes)))
@@ -28,20 +31,23 @@
                           :number (nth 4 verse)
                           :text (nth 5 verse))))
 
-(defgeneric verse-to-string (verse &key separator))
-(defmethod verse-to-string (verse &key (separator " "))
+(defgeneric verse-to-string (verse &key separator translation))
+(defmethod verse-to-string (verse &key (separator " ") translation)
+  (declare (ignore translation))
   (format nil "~A ~A:~A~A~A" (cadr verse)
           (nth 3 verse)
           (nth 4 verse)
           separator
           (nth 5 verse)))
 
-(defmethod verse-to-string ((verse verse) &key (separator "<br/>"))
+(defmethod verse-to-string ((verse verse)
+                            &key (separator "<br/>")
+                              (translation :mng))
   (format nil "~A ~A:~A~A ~A" (bsname verse)
           (chapter verse)
           (vnumber verse)
           separator
-          (text verse)))
+          (cdr (assoc translation (translations verse)))))
 
 (defmethod show-notes ((verse verse) (parent clog:clog-obj))
   (let* ((win (clog-gui:create-gui-window parent
@@ -73,9 +79,9 @@
                          (declare (ignore obj))
                          (push (clog:value text) (notes verse))))))
 
-(defgeneric verse-to-clog (verse parent))
-(defmethod verse-to-clog ((verse verse) (parent clog:clog-obj))
-  (let* ((verse-string (verse-to-string verse))
+(defgeneric verse-to-clog (verse parent &key translation))
+(defmethod verse-to-clog ((verse verse) (parent clog:clog-obj) &key (translation :mng))
+  (let* ((verse-string (verse-to-string verse :translation translation))
          (display (clog:create-p parent
                                  :content verse-string)))
     (clog:set-on-click display
@@ -89,7 +95,7 @@
         (bsname verse)
         (chapter verse)
         (vnumber verse)
-        (text verse)
+        (translations verse)
         (notes verse)))
 
 (defmethod to-sexp ((bible cons))
@@ -101,8 +107,9 @@
                  :bsname (cadr sexp)
                  :chapter (caddr sexp)
                  :number (nth 3 sexp)
-                 :text (nth 4 sexp)
-                 :notes (nth 5 sexp)))
+                 :translations (nth 4 sexp)
+                 :notes (nth 6 sexp)))
 
 (defun from-sexp (bible)
   (mapcar #'verse-from-sexp bible))
+

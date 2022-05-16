@@ -24,7 +24,7 @@
     (create-p div :content (ergebnis/se
                             (length results)))
     (mapc (lambda (verse)
-            (v:verse-to-clog verse div))
+            (v:verse-to-clog verse div :translation d::*translation*))
           results)))
 
 (defun searcher (window)
@@ -38,11 +38,18 @@
   (lambda (obj)
     (declare (ignore obj))
     (form-dialog window "Which bible do you want?"
-                 '(("Bible" "bible" :select (("Menge" "mng")
-                                             ("King James Version" "kjv")
-                                             ("Vulgata" "vul")
-                                             ("Greek Bible" "grb"))))
+                 '(("Bible" "bible" :select (("Menge" :mng)
+                                             ("King James Version" :kjv)
+                                             ("Vulgata" :vul)
+                                             ("Greek Bible" :grb)
+                                             ("Elberfelder Übersetzung  1871" :elb1871)
+                                             ("NEÜ" :neue)
+                                             ("Luther 1545" :luth1545)
+                                             ("Luther 1912" :luth1912)
+                                             ("Schlachter 1951" :sch1951)
+                                             ("Ukrainische Version" :ukr))))
                  (lambda (results)
+                   (princ (cadar results))
                    (d:update-bible (cadar results))
                    :title "Load a Bible"))))
 
@@ -63,7 +70,7 @@
                                          :width 650)))
          (div (create-div win)))
     (mapc (lambda (verse)
-            (v:verse-to-clog verse div))
+            (v:verse-to-clog verse div :translation d::*translation*))
           (s:find-book d:*bible* book))))
 
 (defun load-chapter (canvas book chapter)
@@ -75,7 +82,7 @@
                                          :width 650)))
          (div (create-div win)))
     (mapc (lambda (verse)
-            (v:verse-to-clog verse div))
+            (v:verse-to-clog verse div :translation d::*translation*))
           (s:find-chapter (s:find-book d:*bible* book) chapter))))
 
 (defun get-chapter (window body)
