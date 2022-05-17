@@ -13,13 +13,17 @@
 (defun ergebnis/se (n)
   (format nil "~A Ergebnis~A" n (if (= n 1) "" "se")))
 
-(defun search-in-bible (phrase canvas)
-  (let* ((win (window-content (create-gui-window canvas :title phrase
-                                                        :height 400
-                                                        :width 650)))
+(defun search-in-bible (phrase bible canvas)
+  (let* ((win (window-content
+               (create-gui-window canvas :title
+                                  (format nil "~A: ~A"
+                                          d:*translation*
+                                          phrase)
+                                  :height 400
+                                  :width 650)))
          (lift-search (create-button win :content "Lift Search"))
          (div (create-div win))
-         (results (s:find-in-bible d:*bible* phrase)))
+         (results (s:find-in-bible bible phrase)))
     (set-on-click lift-search (lift-search-window canvas results))
     (create-p div :content (ergebnis/se
                             (length results)))
@@ -27,12 +31,32 @@
             (v:verse-to-clog verse div :translation d:*translation*))
           results)))
 
+(defun %bible-book-or-chapter (bible book chapter)
+  (if (string= book "")
+      bible
+      (let ((book (s:find-book bible book)))
+        (if (string= chapter "")
+            book
+            (s:find-chapter book chapter)))))
+
+(defun search-with-chapter (window)
+  (lambda (data)
+    (let ((book (cadr (assoc "book" data :test #'string=)))
+          (chapter (cadr (assoc "chapter" data :test #'string=)))
+          (phrase (cadr (assoc "phrase" data :test #'string=))))
+      (search-in-bible phrase
+                       (%bible-book-or-chapter d:*bible* book chapter)
+                       window))))
+
 (defun searcher (window)
   (lambda (obj)
     (declare (ignore obj))
-    (input-dialog window "What do you want to search?"
-                  (lambda (phrase)
-                    (search-in-bible phrase window))))) 
+    (form-dialog window "What do you want to search?"
+                 '(("Phrase" "phrase" :text)
+                   ("Book" "book" :text)
+                   ("Chapter" "chapter" :text))
+                 (search-with-chapter window)
+                 :title "Search a phrase")))
 
 (defun reload (window)
   (lambda (obj)
@@ -49,7 +73,6 @@
                                              ("Schlachter 1951" :sch1951)
                                              ("Ukrainische Version" :ukr))))
                  (lambda (results)
-                   (princ (cadar results))
                    (d:update-bible (cadar results))
                    :title "Load a Bible"))))
 
@@ -60,7 +83,7 @@
       (if (string= chapter "")
           (load-book canvas book)
           (load-chapter canvas book chapter)))))
-           
+
 
 (defun load-book (canvas book)
   (let* ((win (window-content
