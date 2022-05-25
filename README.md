@@ -1,26 +1,19 @@
 # cl-bible
 
 # Project moved [here](https://git.silasvedder.xyz/silasfox/cl-bible)!!!
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
 ![Screenshot](screenshot.png)
 
 ## installation
